@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  dev:
+    build:
+      context: .
+      target: builder
+      args:
+        dev: "TRUE"
+    container_name: dev
+    working_dir: /src
+    environment:
+      SSH_AUTH_SOCK: "${SSH_AUTH_SOCK:-/run/host-services/ssh-auth.sock}"
+    volumes:
+      - type: bind
+        source: "${SSH_AUTH_SOCK:-/run/host-services/ssh-auth.sock}"  # default: Docker for Mac
+        target: /run/host-services/ssh-auth.sock
+      - type: bind
+        source: .
+        target: /src
+    command: tail -f /dev/null
+
